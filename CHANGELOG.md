@@ -5,6 +5,47 @@
 
 ---
 
+## [Modif] Le Labo : grille auto-adaptative, nouvel ordre, texte Game 5 resserré
+
+Trois changements demandés par Kam sur `/labo` (`app/labo/page.tsx`).
+
+**1. Fin du plafond à 2 colonnes.** L'ancienne consigne « 2 cartes par ligne »
+(commit `e1aedde`) est levée : la grille s'adapte désormais à la largeur
+disponible.
+
+- `sm:grid-cols-2` → `grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]`.
+- **Le `max-w-3xl` du conteneur de liste a été retiré** — c'est lui qui
+  plafonnait mécaniquement la grille : 48rem de large ne laissait jamais la
+  place à plus de 2 colonnes, quelle que soit la classe de grille. La liste
+  utilise maintenant le `max-w-content` (72rem) de la section.
+- Mesuré en local : **390 px → 1 colonne, 768 px → 2, 1024 px → 3,
+  1280 px → 4**. Aucun débordement horizontal à aucune de ces largeurs.
+
+**2. Nouvel ordre d'affichage** (choix éditorial, pas chronologique) :
+Game 5 → Tron → Ma Ludothèque → Les Mousquetaires. La grille suivant l'ordre
+du tableau `PROJECTS`, seul ce tableau a été réordonné.
+
+**3. Description de Game 5 resserrée** pour l'homogénéité des cartes : le
+pavé de 4 phrases est remplacé par la version courte en 2 phrases (« Une
+carrière entière de joueur esport en quinze minutes… »). Les 4 cartes font
+désormais exactement la même hauteur (421 px mesurés en 4 colonnes), ce qui
+supprime le blanc qui s'étirait sous la carte Ma Ludothèque. Toujours en
+`font-terminal` (pas de police pixel sur le corps de texte).
+
+Vérifié en local : `tsc --noEmit` sans erreur, `npm run build` OK, ordre et
+nombre de colonnes contrôlés dans le DOM rendu aux 4 largeurs, hauteurs de
+cartes identiques.
+
+> Note de méthode : dans le navigateur headless utilisé pour les captures,
+> les blocs `Reveal` (framer-motion `whileInView`) restent à `opacity: 0` sur
+> un chargement neuf — l'`IntersectionObserver` ne se déclenche pas sans vrai
+> scroll. Comportement **pré-existant** (observé à l'identique sur la prod
+> avant ces changements), sans effet pour un visiteur réel. Les captures ont
+> été prises en forçant l'état final de l'animation en CSS ; la mise en page
+> mesurée n'en dépend pas.
+
+---
+
 ## [Ajout] Le Labo : 4ᵉ entrée « Game 5 » (+ premier visuel réel du site)
 
 Ajout d'un quatrième projet dans la liste de `/labo` (`app/labo/page.tsx`),

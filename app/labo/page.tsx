@@ -21,14 +21,17 @@ export const metadata: Metadata = {
   description: "Projets perso et expérimentations K1000 Studio. Rien à vendre ici.",
 };
 
+/** Ordre d'affichage volontaire (choix éditorial, pas chronologique) — la
+ * grille suit l'ordre de ce tableau. Les descriptions sont tenues au même
+ * gabarit (~2 phrases) pour que les cartes restent homogènes sur une ligne. */
 const PROJECTS = [
   {
-    key: "mousquetaires",
-    name: "Les Mousquetaires",
-    kind: "Site réel · livré",
+    key: "game5",
+    name: "Game 5",
+    kind: "Jeu réel · en ligne",
     description:
-      "Site du club de foot américain Les Mousquetaires — un projet réel, livré bénévolement.",
-    href: "https://mousquetairesfootus.fr/",
+      "Une carrière entière de joueur esport en quinze minutes, une carte à la fois. Chaque situation ne laisse que deux ou trois choix, aucun ne se reprend.",
+    href: "https://game5.fr",
     external: true,
   },
   {
@@ -50,12 +53,12 @@ const PROJECTS = [
     external: true,
   },
   {
-    key: "game5",
-    name: "Game 5",
-    kind: "Jeu réel · en ligne",
+    key: "mousquetaires",
+    name: "Les Mousquetaires",
+    kind: "Site réel · livré",
     description:
-      "Une simulation de carrière de joueur esport, de ses seize ans à sa retraite. Chaque situation ne laisse que deux ou trois choix, aucun ne se reprend. Derrière l'interface tourne un moteur entièrement déterministe, calibré sur des centaines de milliers de carrières simulées : une sur trois cents devient une légende. Chaque partie produit une carte de fin de carrière unique et partageable.",
-    href: "https://game5.fr",
+      "Site du club de foot américain Les Mousquetaires — un projet réel, livré bénévolement.",
+    href: "https://mousquetairesfootus.fr/",
     external: true,
   },
 ] as const;
@@ -158,8 +161,12 @@ export default function LaboPage() {
             </p>
           </Reveal>
 
-          <Reveal delay={0.1} className="mt-12 max-w-3xl">
-            <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <Reveal delay={0.1} className="mt-12">
+            {/* Grille auto-adaptative : le nombre de colonnes découle de la
+             * largeur dispo (1 sur mobile, jusqu'à 4 sur large écran) au lieu
+             * d'être figé à 2. Le conteneur n'est plus bridé à max-w-3xl, qui
+             * plafonnait mécaniquement la grille à 2 colonnes. */}
+            <ul className="grid grid-cols-[repeat(auto-fit,minmax(16rem,1fr))] gap-5">
               {PROJECTS.map((p) => {
                 const Preview = PREVIEWS[p.key];
                 return (
