@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import SmoothScroll from "@/components/v2/SmoothScroll";
 import V3Nav from "@/components/v3/Nav";
@@ -48,6 +49,15 @@ const PROJECTS = [
     href: "https://ma-ludotheque.vercel.app",
     external: true,
   },
+  {
+    key: "game5",
+    name: "Game 5",
+    kind: "Jeu réel · en ligne",
+    description:
+      "Une simulation de carrière de joueur esport, de ses seize ans à sa retraite. Chaque situation ne laisse que deux ou trois choix, aucun ne se reprend. Derrière l'interface tourne un moteur entièrement déterministe, calibré sur des centaines de milliers de carrières simulées : une sur trois cents devient une légende. Chaque partie produit une carte de fin de carrière unique et partageable.",
+    href: "https://game5.fr",
+    external: true,
+  },
 ] as const;
 
 /** Petit aperçu déco du projet Mousquetaires — pas le vrai visuel du site,
@@ -70,6 +80,24 @@ function LudothequePreview() {
       <span className="text-5xl" aria-hidden>
         🎲
       </span>
+    </div>
+  );
+}
+
+/** Aperçu du projet Game 5 — contrairement aux autres entrées, on dispose ici
+ * du vrai visuel du jeu (l'image OG), donc on l'utilise plutôt qu'un repère
+ * thématique. Même gabarit que les autres aperçus (hauteur h-32, bord arrondi)
+ * pour que la grille reste homogène. */
+function Game5Preview() {
+  return (
+    <div className="relative h-32 overflow-hidden rounded-lg border border-arcade-border bg-arcade-bg-alt">
+      <Image
+        src="/portfolio/game5-og.jpg"
+        alt="Game 5 — carte de fin de carrière d'un joueur esport"
+        fill
+        sizes="(min-width: 640px) 20rem, 100vw"
+        className="object-cover"
+      />
     </div>
   );
 }
@@ -101,6 +129,14 @@ function TronPreview() {
   );
 }
 
+/** Un aperçu par projet — la clé du projet suffit à retrouver le sien. */
+const PREVIEWS: Record<(typeof PROJECTS)[number]["key"], () => JSX.Element> = {
+  mousquetaires: MousquetairesPreview,
+  tron: TronPreview,
+  ludotheque: LudothequePreview,
+  game5: Game5Preview,
+};
+
 export default function LaboPage() {
   return (
     <div className="bg-arcade-bg text-arcade-cream">
@@ -125,12 +161,7 @@ export default function LaboPage() {
           <Reveal delay={0.1} className="mt-12 max-w-3xl">
             <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               {PROJECTS.map((p) => {
-                const Preview =
-                  p.key === "mousquetaires"
-                    ? MousquetairesPreview
-                    : p.key === "ludotheque"
-                      ? LudothequePreview
-                      : TronPreview;
+                const Preview = PREVIEWS[p.key];
                 return (
                   <li
                     key={p.key}

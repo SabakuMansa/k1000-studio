@@ -5,6 +5,58 @@
 
 ---
 
+## [Ajout] Le Labo : 4ᵉ entrée « Game 5 » (+ premier visuel réel du site)
+
+Ajout d'un quatrième projet dans la liste de `/labo` (`app/labo/page.tsx`),
+au **même format** que les trois existants (Mousquetaires, Tron, Ludothèque) :
+
+- **Titre** : « Game 5 » · **statut** : « Jeu réel · en ligne ».
+- **Lien** : `https://game5.fr` — ouvre dans un **nouvel onglet**
+  (`external: true` → `target="_blank" rel="noopener noreferrer"`, vérifié
+  dans le DOM rendu).
+- **Description** (police `font-terminal` = VT323, **pas** de police pixel,
+  contrainte de lisibilité respectée, vérifiée via `getComputedStyle`) :
+  simulation de carrière de joueur esport, moteur déterministe calibré sur des
+  centaines de milliers de carrières, carte de fin de carrière partageable.
+
+**Premier visuel bitmap du site.** Contrairement aux autres entrées (aperçus
+déco emoji/SVG, explicitement « pas le vrai visuel »), on dispose ici du vrai
+visuel du jeu, donc `Game5Preview` l'affiche :
+
+- Image copiée par `cp` depuis `/Users/kam/Projects/game5/portfolio/game5-og.jpg`
+  vers `public/portfolio/game5-og.jpg` (1200×630, 59 Ko). **Aucun fichier du
+  projet game5 n'a été modifié.**
+- Le dossier `portfolio/` de game5 contenait aussi `game5-accueil.png` (480×900)
+  et `game5-carte-de-jeu.png` (480×840) — non retenus : format portrait mobile,
+  inadapté au gabarit paysage `h-32` des aperçus.
+- Premier usage de `next/image` dans le dépôt (aucun `<Image>` ni `<img>`
+  n'existait auparavant) : `fill` + `object-cover` dans le conteneur `h-32`
+  habituel, pour que la grille reste homogène.
+
+**Refactor au passage** : le sélecteur d'aperçu était un ternaire imbriqué à
+3 cas ; passé à une table `PREVIEWS` indexée par `p.key` (typée sur les clés de
+`PROJECTS`), pour éviter un 4ᵉ niveau d'imbrication.
+
+Vérifié en local (`localhost:3002/labo`) : `tsc --noEmit` sans erreur, aucune
+erreur console, image servie par l'optimiseur Next (HTTP 200, `naturalWidth`
+> 0), rendu desktop (1280) et mobile (390) OK sans débordement horizontal.
+Non-régression : `/`, `/qui-je-suis`, `/labo`, `/labo/tron`,
+`/exemples/presence`, `/exemples/boutique` répondent tous 200. Diff limité à
+`app/labo/page.tsx` + le nouveau `public/portfolio/`.
+
+> **Note de périmètre** : la demande prévoyait aussi une carte Game 5 dans une
+> section « Mes Créations » → « Explorations créatives ». Cette section
+> **n'existe nulle part** dans le dépôt : ni dans le code, ni dans
+> `app/_archive/`, ni dans l'historique git (`git log -S`). La page d'accueil
+> n'a que 4 blocs (`V3Verdict`, `V3Hero`, `V3Plans`, `V3Fondateur`) et `/labo`
+> est le seul endroit avec des cartes projets. Arbitrage validé par Kam :
+> **`/labo` tient lieu de « Mes Créations »**, l'entrée ci-dessus couvre donc
+> les deux demandes. Ni la homepage ni la nav n'ont été modifiées.
+
+**Tout reste local** (aucun déploiement demandé).
+
+---
+
 ## [Ajout] Le Labo : 3ᵉ entrée « Ma Ludothèque »
 
 Ajout d'un troisième projet dans la liste de `/labo` (`app/labo/page.tsx`),
